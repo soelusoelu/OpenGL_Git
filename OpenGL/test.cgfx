@@ -1,0 +1,32 @@
+sampler2D baseMap = sampler_state {
+    minFilter = Nearest;
+    magFilter = Nearest;
+};
+
+struct VS_INPUT {
+    float4 position : POSITION;
+    float2 texcoord : TEXCOORD0;
+};
+
+struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord : TEXCOORD00;
+};
+
+VS_OUTPUT vs_main(VS_INPUT input) {
+    VS_OUTPUT output;
+    output.position = input.position;
+    output.texcoord = input.texcoord;
+    return output;
+}
+
+float4 ps_main(VS_OUTPUT input) : COLOR0 {
+    return tex2D(baseMap, input.texcoord);
+}
+
+technique Test {
+    pass Pass0 {
+        VertexProgram = compile arbvp1 vs_main();
+        FragmentProgram = compile arbfp1 ps_main();
+    }
+}
