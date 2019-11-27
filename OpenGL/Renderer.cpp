@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include "Buffer.h"
-#include "Texture.h"
+#include "Texture1D.h"
+#include "Texture2D.h"
+#include "Texture3D.h"
 #include "VertexDeclaration.h"
 #include "Effect.h"
 #include <cassert>
@@ -72,7 +74,22 @@ IBuffer* Renderer::createBuffer(const BufferDesc& desc, const void* data) {
 }
 
 ITexture* Renderer::createTexture(const TextureDesc& desc, const void* data) {
-    return new Texture(desc, data);
+    Texture* texture = nullptr;
+    switch (desc.type) {
+    case TextureType::TEXTURE_TYPE_1D:
+        texture = new Texture1D(desc, data);
+        break;
+    case TextureType::TEXTURE_TYPE_2D:
+        texture = new Texture2D(desc, data);
+        break;
+    case TextureType::TEXTURE_TYPE_3D:
+        texture = new Texture3D(desc, data);
+        break;
+    case TextureType::TEXTURE_TYPE_CUBE:
+        texture = new Texture2D(desc, data);
+        break;
+    }
+    return texture;
 }
 
 IVertexDeclaration* Renderer::createVertexDeclaration(const VertexDeclarationDesc desc[], unsigned numDesc, const InputSignatureDesc& inputSignature) {

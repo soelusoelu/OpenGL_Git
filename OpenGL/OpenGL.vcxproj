@@ -143,6 +143,9 @@
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Texture1D.h" />
+    <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="Texture3D.h" />
     <ClInclude Include="TextureDesc.h" />
     <ClInclude Include="VertexDeclaration.h" />
     <ClInclude Include="VertexDeclarationDesc.h" />
@@ -156,6 +159,9 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Texture1D.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="Texture3D.cpp" />
     <ClCompile Include="VertexDeclaration.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -6,8 +6,6 @@
 
 class Texture : public ITexture {
 public:
-    Texture(const TextureDesc& desc, const void* data);
-    virtual ~Texture();
     //ディスクリプタの取得
     virtual const TextureDesc& desc() const override;
     //データの設定
@@ -23,6 +21,8 @@ public:
     GLuint texture() const;
 
 protected:
+    Texture(const TextureDesc& desc);
+    virtual ~Texture();
     //テクスチャタイプ型
     struct Type {
         GLenum target;
@@ -43,10 +43,24 @@ protected:
     void initialize(const void* data);
     //ピクセルフォーマットの取得
     const Pixel& pixel() const;
+    //イメージサイズの計算
+    unsigned imageSize(unsigned mipLevel) const;
+    //ミップマップサイズを取得
+    static unsigned mipSize(unsigned size, unsigned mipLevel);
+    //イメージ設定用のターゲットを取得
+    GLenum target(unsigned index) const;
 
 private:
     //テクスチャのタイプを変換
     static const Type& toType(TextureType type);
+    //テクスチャ配列サイズの取得
+    unsigned arraySize() const;
+    //イメージの取得
+    void getTexImage(void* data, unsigned mipLevel, unsigned index) const;
+    //イメージの設定
+    virtual void texImage(const void* data, unsigned mipLevel, unsigned index) = 0;
+    //イメージの更新
+    virtual void texSubImage(const void* data, unsigned mipLevel, unsigned index) = 0;
 
     //コピー禁止
     Texture(const Texture&) = delete;
