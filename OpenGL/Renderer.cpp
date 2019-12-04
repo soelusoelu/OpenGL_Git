@@ -12,12 +12,17 @@ Renderer::Renderer() :
     mIndexBuffer(nullptr),
     mIndexFormat(toIndexFormat(IndexType::INDEX_TYPE_USHORT)),
     mIndexOffset(0),
-    mPrimitiveMode(toPrimitiveMode(PrimitiveType::PRIMITIVE_TYPE_TRIANGLE_LIST)) {
+    mPrimitiveMode(toPrimitiveMode(PrimitiveType::PRIMITIVE_TYPE_TRIANGLE_LIST)),
+    mFramebufferObject(0) {
+    //フレームバッファオブジェクトの作成
+    glGenFramebuffersEXT(1, &mFramebufferObject);
     initialize();
 }
 
 Renderer::~Renderer() {
     clearState();
+    //フレームバッファオブジェクトの削除
+    glDeleteFramebuffersEXT(1, &mFramebufferObject);
 }
 
 void Renderer::initialize() {
@@ -150,12 +155,59 @@ void Renderer::drawIndexed(unsigned numIndices, unsigned startIndex, unsigned st
 }
 
 void Renderer::setRenderTargets(ITexture* targets[], unsigned numTargets, ITexture* depthStencil, unsigned index) {
+    //レンダーターゲットをリセット
+    resetRenderTarget();
+    //何も設定されていない場合はリセットのみ
+    if (targets == nullptr && depthStencil == nullptr) {
+        return;
+    }
+    //フレームバッファオブジェクトのバインド
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mFramebufferObject);
+    //デプスステンシルバッファの設定
+    Texture* depthStencilBuffer = dynamic_cast<Texture*>(depthStencil);
+    if (depthStencilBuffer) {
+        depthStencilBuffer->attachDepthStencil();
+    }
+    //レンダーターゲットの設定
+    GLenum drawBuffers[RENDER_TARGET_MAX];
+    for (GLuint i = 0; i < numTargets; ++i) {
+        //テクスチャをフレームバッファオブジェクトにアタッチ
+        dynamic_cast<Texture*>(targets[i])->attachFramebuffer(i, index);
+        //描画バッファの設定
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0_EXT + i;
+    }
+    //レンダーターゲットが存在するか
+    if (numTargets > 0) {
+        //描画バッファの設定
+        glDrawBuffersARB(numTargets, drawBuffers);
+    } else {
+        //描画バッファへの書き込みをしないようにする
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+    }
+    assert(glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) == GL_FRAMEBUFFER_COMPLETE_EXT);
 }
 
 void Renderer::resetRenderTarget() {
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mFramebufferObject);
+    //デプス・ステンシルバッファのリセット
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
+    //レンダーターゲットのリセット
+    GLint maxDrawBuffer;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffer);
+    for (GLint i = 0; i < maxDrawBuffer; ++i) {
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + i, GL_TEXTURE_2D, 0, 0);
+    }
+    //描画・読み込みバッファのリセット
+    glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+    glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+    //フレームバッファオブジェクトをリセット
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
 void Renderer::generateMipmap(ITexture* texture) {
+    dynamic_cast<Texture*>(texture)->generateMipmap();
 }
 
 void Renderer::flush() {

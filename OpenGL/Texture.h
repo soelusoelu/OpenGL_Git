@@ -20,6 +20,13 @@ public:
     //テクスチャオブジェクトの取得
     GLuint texture() const;
 
+    //デプス・ステンシルバッファのアタッチ
+    void attachDepthStencil();
+    //フレームバッファオブジェクトへのアタッチ
+    void attachFramebuffer(GLuint drawBuffer, unsigned index);
+    //ミップマップの作成
+    void generateMipmap();
+
 protected:
     Texture(const TextureDesc& desc);
     virtual ~Texture();
@@ -61,6 +68,8 @@ private:
     virtual void texImage(const void* data, unsigned mipLevel, unsigned index) = 0;
     //イメージの更新
     virtual void texSubImage(const void* data, unsigned mipLevel, unsigned index) = 0;
+    //フレームバッファオブジェクトにアタッチ
+    virtual void framebufferTexture(GLuint drawBuffer, unsigned index) = 0;
 
     //コピー禁止
     Texture(const Texture&) = delete;
@@ -73,6 +82,10 @@ private:
     Type mType;
     //テクスチャオブジェクト
     GLuint mTexture;
+    //デプステクスチャ
+    GLuint mDepthTexture;
+    //ステンシルテクスチャ
+    GLuint mStencilTexture;
 };
 
 #endif // !_TEXTURE_H_

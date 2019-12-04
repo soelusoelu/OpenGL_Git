@@ -3,9 +3,25 @@
 Texture::Texture(const TextureDesc& desc) :
     mDesc(desc),
     mType(toType(mDesc.type)),
-    mTexture(0) {
+    mTexture(0),
+    mDepthTexture(0),
+    mStencilTexture(0) {
     //テクスチャを作成
     glGenTextures(1, &mTexture);
+    //デプスバッファで使用するか
+    if (pixel().depthFormat) {
+        mDepthTexture = mTexture;
+        mType.target = GL_TEXTURE_2D;
+        mType.arrayTarget = GL_TEXTURE_2D;
+        mType.arraySize = 1;
+    }
+    //ステンシルバッファで使用するか
+    if (pixel().stencilFormat) {
+        mStencilTexture = mTexture;
+        mType.target = GL_TEXTURE_2D;
+        mType.arrayTarget = GL_TEXTURE_2D;
+        mType.arraySize = 1;
+    }
 }
 
 Texture::~Texture() {
@@ -59,6 +75,37 @@ GLenum Texture::target(unsigned index) const {
 
 GLuint Texture::texture() const {
     return mTexture;
+}
+
+void Texture::attachDepthStencil() {
+    //デプスバッファ用のテクスチャを設定
+    glFramebufferTexture2DEXT(
+        GL_FRAMEBUFFER_EXT,
+        GL_DEPTH_ATTACHMENT_EXT,
+        GL_TEXTURE_2D,
+        mDepthTexture,
+        0
+    );
+    //ステンシルバッファ用のテクスチャを設定
+    glFramebufferTexture2DEXT(
+        GL_FRAMEBUFFER_EXT,
+        GL_STENCIL_ATTACHMENT_EXT,
+        GL_TEXTURE_2D,
+        mStencilTexture,
+        0
+    );
+}
+
+void Texture::attachFramebuffer(GLuint drawBuffer, unsigned index) {
+    framebufferTexture(drawBuffer, index);
+}
+
+void Texture::generateMipmap() {
+    glEnable(target());
+    glBindTexture(target(), mTexture);
+    glGenerateMipmapEXT(target());
+    glBindTexture(target(), 0);
+    glDisable(target());
 }
 
 void Texture::initialize(const void* data) {

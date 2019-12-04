@@ -25,3 +25,14 @@ void Texture1D::texSubImage(const void* data, unsigned mipLevel, unsigned index)
         pixel().format, pixel().type, data
     );
 }
+
+void Texture1D::framebufferTexture(GLuint drawBuffer, unsigned index) {
+    (void)index;
+    glFramebufferTexture1DEXT(
+        GL_FRAMEBUFFER_EXT,
+        GL_COLOR_ATTACHMENT0_EXT + drawBuffer,
+        GL_TEXTURE_1D,
+        texture(),
+        0
+    );
+}

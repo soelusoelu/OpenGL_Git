@@ -12,6 +12,8 @@ private:
     virtual void texImage(const void* data, unsigned mipLevel, unsigned index) override;
     //イメージの更新
     virtual void texSubImage(const void* data, unsigned mipLevel, unsigned index) override;
+    //FBOにアタッチ
+    virtual void framebufferTexture(GLuint drawBuffer, unsigned index) override;
 };
 
 #endif // !_TEXTURE1D_H_

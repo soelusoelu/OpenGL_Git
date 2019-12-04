@@ -10,6 +10,8 @@ public:
 private:
     virtual void texImage(const void* data, unsigned mipLevel, unsigned index) override;
     virtual void texSubImage(const void* data, unsigned mipLevel, unsigned index) override;
+    //フレームバッファオブジェクトにアタッチ
+    virtual void framebufferTexture(GLuint drawBuffer, unsigned index) override;
 };
 
 #endif // !_TEXTURE3D_H_

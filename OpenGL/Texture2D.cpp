@@ -57,3 +57,13 @@ void Texture2D::texSubImage(const void* data, unsigned mipLevel, unsigned index)
         );
     }
 }
+
+void Texture2D::framebufferTexture(GLuint drawBuffer, unsigned index) {
+    glFramebufferTexture2DEXT(
+        GL_FRAMEBUFFER_EXT,
+        GL_COLOR_ATTACHMENT0_EXT + drawBuffer,
+        target(index),
+        texture(),
+        0
+    );
+}
