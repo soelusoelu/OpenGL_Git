@@ -140,6 +140,8 @@
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IVertexDeclaration.h" />
+    <ClInclude Include="MathUtility.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Texture.h" />
@@ -147,6 +149,8 @@
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Texture3D.h" />
     <ClInclude Include="TextureDesc.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="VertexDeclaration.h" />
     <ClInclude Include="VertexDeclarationDesc.h" />
     <ClInclude Include="VertexStreamDesc.h" />
@@ -157,11 +161,15 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="GLee\GLee.c" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MathUtility.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Texture1D.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Texture3D.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="VertexDeclaration.cpp" />
   </ItemGroup>
   <ItemGroup>

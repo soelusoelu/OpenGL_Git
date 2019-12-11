@@ -24,6 +24,10 @@
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Texture1D.h" />
     <ClInclude Include="Texture3D.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="MathUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -38,6 +42,10 @@
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Texture1D.cpp" />
     <ClCompile Include="Texture3D.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="MathUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GLee">
